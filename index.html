@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cellphone GPS Integration</title>
+    <script src="https://www.bing.com/api/maps/mapcontrol?callback=loadMap&key=ArbhtvGfosvoQ3LVaUfARo7vu4pFHw2w0LLDc4AjhgVJYNdWYbBreeqY86t_Hrc3" async defer></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 400px;"></div>
+    <button id="startTracking">Start GPS Tracking</button>
+
+    <script>
+        // Initialize the map
+        var map;
+        function loadMap() {
+            map = new Microsoft.Maps.Map(document.getElementById('map'), {
+                center: new Microsoft.Maps.Location(47.6062, -122.3321), // Set initial map center (Seattle, WA)
+                zoom: 12, // Set initial zoom level
+            });
+        }
+
+        // Function to track the user's location
+        function trackUserLocation() {
+            if (navigator.geolocation) {
+                navigator.geolocation.watchPosition(function (position) {
+                    var location = new Microsoft.Maps.Location(position.coords.latitude, position.coords.longitude);
+                    // Clear existing pushpins
+                    map.entities.clear();
+                    // Add a pushpin (blue point) for the current location
+                    var pushpin = new Microsoft.Maps.Pushpin(location, { color: 'blue' });
+                    map.entities.push(pushpin);
+                    // Set the map view to the current location
+                    map.setView({ center: location });
+                }, function (error) {
+                    console.error('Error getting user location:', error);
+                });
+            } else {
+                console.error('Geolocation is not supported by this browser.');
+            }
+        }
+
+        // Attach event listener to the button
+        document.getElementById('startTracking').addEventListener('click', trackUserLocation);
+    </script>
+</body>
+</html>
